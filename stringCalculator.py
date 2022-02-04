@@ -1,12 +1,22 @@
 # Lucas Kobashi dos Anjos
 # lucas.kobashi@cs.usask.ca
 
+import re
+
+
 def Add(numbers):
-    '''
-    Adds all positive numbers
+    """
+    Adds all positive numbers.
+
+    Remarks:
+    Whitespace is ignored.
+    Error message displays only the number that triggered the error.
+    If multiple delimiters are included, they should be separated by a comma
+    (therefore, a comma cannot be a custom delimiter).
+
     :param numbers: String, numbers separated by a delimiter
     :return: Int, sum of numbers
-    '''
+    """
 
     # empty string
     if numbers == "":
@@ -14,14 +24,14 @@ def Add(numbers):
 
     # set up delimiter
     customDelimiter = False
-    delimiter = ","
+    multipleDelimiters = False
 
-    ## enable custom delimiter
+    # enable custom delimiter
     if numbers[0:2] == "//":
         customDelimiter = True
 
     if customDelimiter:
-        delimiter = "" # reset delimiter
+        delimiter = ""
         counter = 0
 
         for char in numbers:
@@ -34,12 +44,38 @@ def Add(numbers):
         delimiter = delimiter[2:]
         numbers = numbers[counter:]
 
-    numList = numbers.strip().split(delimiter)
+        if "," in delimiter:
+            multipleDelimiters = True
+
+    # remove whitespace
+    numbers = re.sub(r"\s", "", numbers)
+
+    # deal with delimiters
+
+    if multipleDelimiters:
+        delimiterList = delimiter.split(",")
+        regexString = ""
+        for i in delimiterList:
+            # if i.isalpha():
+            #     regexString += i + "|"
+            # else:
+            #     regexString += "\\"[0] + i + "|"
+            regexString += "[" + i + "]+|"
+        numbers = re.sub(regexString[0:-1], ",", numbers)
+    elif customDelimiter:
+        regexString = "[" + delimiter + "]+"
+        # if delimiter.isalpha():
+        #     regexString = delimiter + "|"
+        # else:
+        #     regexString = "\\"[0] + delimiter + "|"
+        numbers = re.sub(regexString, ",", numbers)
+
+    numList = numbers.split(",")
     total = 0
     for n in numList:
         if int(n) < 0:
             raise ValueError('Negatives not allowed, error thrown by %s' % n)
-        else:
+        elif int(n) < 1000:
             total += int(n)
 
     return total
@@ -111,3 +147,12 @@ except ValueError:
     worked = True
 if not worked:
     print("Error! test with last negative number")
+
+if Add("2, 1001") != 2:
+    print("Error! test with item greater than 1000")
+
+if Add("//$$$\n1$$$2$$$3") != 6:
+    print("Error! test with delimiter of arbitrary length")
+
+if Add("//$,@\n1$2@3") != 6:
+    print("Error! test with delimiter of arbitrary length")
