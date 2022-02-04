@@ -23,6 +23,7 @@ def Add(numbers):
         return 0
 
     # set up delimiter
+    delimiter = ""
     customDelimiter = False
     multipleDelimiters = False
 
@@ -31,7 +32,6 @@ def Add(numbers):
         customDelimiter = True
 
     if customDelimiter:
-        delimiter = ""
         counter = 0
 
         for char in numbers:
@@ -51,34 +51,24 @@ def Add(numbers):
     numbers = re.sub(r"\s", "", numbers)
 
     # deal with delimiters
-
     if multipleDelimiters:
-        delimiterList = delimiter.split(",")
         regexString = ""
-        for i in delimiterList:
-            # if i.isalpha():
-            #     regexString += i + "|"
-            # else:
-            #     regexString += "\\"[0] + i + "|"
+        for i in delimiter.split(","):
             regexString += "[" + i + "]+|"
         numbers = re.sub(regexString[0:-1], ",", numbers)
     elif customDelimiter:
         regexString = "[" + delimiter + "]+"
-        # if delimiter.isalpha():
-        #     regexString = delimiter + "|"
-        # else:
-        #     regexString = "\\"[0] + delimiter + "|"
         numbers = re.sub(regexString, ",", numbers)
 
-    numList = numbers.split(",")
     total = 0
-    for n in numList:
+    for n in numbers.split(","):
         if int(n) < 0:
             raise ValueError('Negatives not allowed, error thrown by %s' % n)
         elif int(n) < 1000:
             total += int(n)
 
     return total
+
 
 # test drivers
 
