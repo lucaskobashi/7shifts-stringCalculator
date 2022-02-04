@@ -3,8 +3,8 @@
 
 def Add(numbers):
     '''
-    Adds all numbers
-    :param numbers: String, numbers separated by a comma
+    Adds all positive numbers
+    :param numbers: String, numbers separated by a delimiter
     :return: Int, sum of numbers
     '''
 
@@ -37,7 +37,10 @@ def Add(numbers):
     numList = numbers.strip().split(delimiter)
     total = 0
     for n in numList:
-        total += int(n)
+        if int(n) < 0:
+            raise ValueError('Negatives not allowed, error thrown by %s' % n)
+        else:
+            total += int(n)
 
     return total
 
@@ -84,3 +87,27 @@ if Add("//!\n  1!   2!    3") != 6:
 
 if Add("//v\n  1\nv  \n 2v    \n3") != 6:
     print("Error! test with custom delimiter, multiple spaces, and new lines")
+
+try:
+    worked = False
+    Add("-1,2,3")
+except ValueError:
+    worked = True
+if not worked:
+    print("Error! test with negative number, error not being thrown")
+
+try:
+    worked = False
+    Add("-1,-2,-3")
+except ValueError:
+    worked = True
+if not worked:
+    print("Error! test with all negative numbers")
+
+try:
+    worked = False
+    Add("1,2,-3")
+except ValueError:
+    worked = True
+if not worked:
+    print("Error! test with last negative number")
