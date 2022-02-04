@@ -145,4 +145,13 @@ if Add("//$$$\n1$$$2$$$3") != 6:
     print("Error! test with delimiter of arbitrary length")
 
 if Add("//$,@\n1$2@3") != 6:
-    print("Error! test with delimiter of arbitrary length")
+    print("Error! test with multiple delimiters")
+
+if Add("//$,@\n1$$2@@@3") != 6:
+    print("Error! test with multiple delimiters of arbitrary length")
+
+if Add("//$ , @ \n 1 $ $ 2 @ @ @ 3 ") != 6:
+    print("Error! test with multiple delimiters of arbitrary length with whitespace")
+
+if Add("//$ , @ \n 1 $ $ 2\n @ @\n @ 3 ") != 6:
+    print("Error! test with multiple delimiters of arbitrary length with whitespace and new lines")
